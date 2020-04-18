@@ -1,0 +1,4 @@
+
+        [console_scripts]
+        bk=bk:cli
+    
