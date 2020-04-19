@@ -121,10 +121,10 @@ def search(ctx, author, name):
 
     books_list = book_service.list_books()
 
-    # if author:
-    #     founded = book_service.search_book_by(books_list, author)
-    if name:
-        founded = book_service.search_book_by(books_list, name)
+    if author:
+        founded = book_service.search_book_by(books_list, author)
+    # if name:
+    #     founded = book_service.search_book_by(books_list, name)
     
     if founded:
         _print_list(founded)
