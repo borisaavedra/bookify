@@ -51,29 +51,7 @@ def list(ctx):
     book_service = BooksServices(ctx.obj["books_table"])
     book_list = book_service.list_books()
 
-    table = BeautifulTable()
-    headers = [name.upper() for name in Books.schema()]
-    table.column_headers = headers
-
-    for book_item in book_list:
-        table.append_row([book_item["name"],
-                         book_item["author"],
-                         book_item["year"],
-                         book_item["publisher"],
-                         book_item["topic"],
-                         book_item["uid"]])
-
-    # This was an effort for padding the columns
-    # max_len = 0
-    # for i in table["NAME"]:
-    #     if len(str(i)) >= max_len:
-    #         max_len = len(str(i))
-
-    # table.set_padding_widths(5)
-    # # table.left_padding_widths["NAME"] = mayor - len("NAME")
-    # # table.right_padding_widths["NAME"] = mayor - len("NAME")
-
-    click.echo(table)
+    _print_list(book_list)
 
 
 @books.command()
@@ -128,9 +106,56 @@ def delete(ctx, book_id):
 
 
 @books.command()
+@click.option("-a", "--author",
+                type=str,
+                # prompt=True,
+                help="Author of the book") 
+@click.option("-n", "--name",
+                type=str,
+                # prompt=True,
+                help="The name of the book")        
 @click.pass_context
-def search(ctx):
+def search(ctx, author, name):
     """Search a Book"""
-    pass
+    book_service = BooksServices(ctx.obj["books_table"])
+
+    books_list = book_service.list_books()
+
+    # if author:
+    #     founded = book_service.search_book_by(books_list, author)
+    if name:
+        founded = book_service.search_book_by(books_list, name)
+    
+    if founded:
+        _print_list(founded)
+    else:
+        click.echo("Book not found")
+
+
+def _print_list(book_list):
+
+    table = BeautifulTable()
+    headers = [name.upper() for name in Books.schema()]
+    table.column_headers = headers
+
+    for book_item in book_list:
+        table.append_row([book_item["name"],
+                        book_item["author"],
+                        book_item["year"],
+                        book_item["publisher"],
+                        book_item["topic"],
+                        book_item["uid"]])
+
+    # This was an effort for padding the columns
+    # max_len = 0
+    # for i in table["NAME"]:
+    #     if len(str(i)) >= max_len:
+    #         max_len = len(str(i))
+
+    # table.set_padding_widths(5)
+    # # table.left_padding_widths["NAME"] = mayor - len("NAME")
+    # # table.right_padding_widths["NAME"] = mayor - len("NAME")
+
+    click.echo(table)
 
 all = books

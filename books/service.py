@@ -35,8 +35,10 @@ class BooksServices:
         seft._save_to_disk(updated_books)
 
 
-    def search_book_by(seft, item):
-        pass
+    def search_book_by(seft, list, item):
+        founded = [book for book in list if book["author"] == item]
+
+        return founded
 
 
     def delete_book(seft, book):
