@@ -40,7 +40,14 @@ class BooksServices:
 
 
     def delete_book(seft, book):
-        pass
+        books = seft.list_books()
+
+        for item in books:
+            if item["uid"] == book.uid:
+                books.remove(book.to_dict())
+
+        seft._save_to_disk(books)
+
 
 
     def _save_to_disk(seft,books):

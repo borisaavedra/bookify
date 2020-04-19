@@ -37,7 +37,11 @@ def create(ctx, name, author, year, publisher, topic):
     book = Books(name, author, year, publisher, topic)
     book_service = BooksServices(ctx.obj["books_table"])
 
-    book_service.create_book(book)
+    try:
+        book_service.create_book(book)
+        click.echo("The book was added")
+    except:
+        click.echo("Something failed. Please try again")
 
 
 @books.command()
@@ -104,10 +108,23 @@ def _update_book_flow(book):
 
 
 @books.command()
+@click.argument("book_id",
+                type=str)
 @click.pass_context
-def delete(ctx):
-    """Deletes a Book"""
-    pass
+def delete(ctx, book_id):
+    """Delete a Book"""
+    book_service = BooksServices(ctx.obj["books_table"])
+
+    books_list = book_service.list_books()
+
+    book = [book for book in books_list if book["uid"] == book_id]
+
+    if book:
+        book = Books(**book[0])
+        book_service.delete_book(book)
+        click.echo("Book deleted")
+    else:
+        click.echo("Book not found")
 
 
 @books.command()
