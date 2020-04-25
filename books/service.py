@@ -35,10 +35,23 @@ class BooksServices:
         seft._save_to_disk(updated_books)
 
 
-    def search_book_by(seft, list, item):
-        founded = [book for book in list if book["author"] == item]
+    def search_book_by(seft, book_list, search_list):
 
-        return founded
+        founded = []
+
+        for book in book_list:
+            for item in search_list:
+                for x in item:
+                    if item[x] in book[x]:
+                        founded.append(book)
+       
+        temp = []
+
+        for book in founded:
+           if book not in temp:
+               temp.append(book)
+
+        return temp
 
 
     def delete_book(seft, book):

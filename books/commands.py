@@ -113,19 +113,39 @@ def delete(ctx, book_id):
 @click.option("-n", "--name",
                 type=str,
                 # prompt=True,
-                help="The name of the book")        
+                help="The name of the book")
+@click.option("-t", "--topic",
+                type=str,
+                # prompt=True,
+                help="The topic's book")
+@click.option("-y", "--year",
+                type=str,
+                # prompt=True,
+                help="The year's book")
+@click.option("-p", "--publisher",
+                type=str,
+                # prompt=True,
+                help="The publisher's book")
 @click.pass_context
-def search(ctx, author, name):
+def search(ctx, author, name, topic, year, publisher):
     """Search a Book"""
     book_service = BooksServices(ctx.obj["books_table"])
 
     books_list = book_service.list_books()
-
+    search = []
     if author:
-        founded = book_service.search_book_by(books_list, author)
-    # if name:
-    #     founded = book_service.search_book_by(books_list, name)
+        search.append({"author": author}) 
+    if name:
+        search.append({"name": name}) 
+    if topic:
+        search.append({"topic": topic}) 
+    if year:
+        search.append({"year": year}) 
+    if publisher:
+        search.append({"publisher": publisher}) 
     
+    founded = book_service.search_book_by(books_list, search)
+
     if founded:
         _print_list(founded)
     else:
